@@ -73,7 +73,8 @@ body {
   min-height: 100vh;
 }
 
-#app {
+#app,
+#root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -95,6 +96,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  text-decoration: none;
 }
 
 .logo-icon {
@@ -116,6 +118,128 @@ body {
   padding: var(--space-xs) var(--space-md);
   border: 1px solid var(--color-border);
   border-radius: 100px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.header-badge:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+/* ===== Tools Grid (Homepage) ===== */
+.home-page {
+  width: 100%;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+.tool-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent-gradient);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.tool-card:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.tool-card:hover::before {
+  opacity: 0.05;
+}
+
+.tool-card--coming-soon {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.tool-card--coming-soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.tool-card__icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+  position: relative;
+  z-index: 1;
+}
+
+.tool-card__name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  position: relative;
+  z-index: 1;
+}
+
+.tool-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+.tool-card__tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.tool-card__tag {
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-secondary);
+  border-radius: 100px;
+  color: var(--color-text-muted);
+}
+
+.tool-card__badge {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  color: var(--color-text-muted);
+}
+
+/* ===== Tool Page ===== */
+.tool-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* ===== Main Content ===== */
