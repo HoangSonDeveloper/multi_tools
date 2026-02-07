@@ -33,7 +33,7 @@ function dataUrlToBlob(input) {
  * @param {string} dataUrl - Image data URL
  * @param {string} filename - Download filename
  */
-export function downloadImage(dataUrl, filename = 'image.png') {
+export function downloadImage(dataUrl, filename = 'removed-background.png') {
     if (!dataUrl) {
         alert('Không có ảnh để tải.');
         return;
@@ -44,11 +44,22 @@ export function downloadImage(dataUrl, filename = 'image.png') {
             ? dataUrlToBlob(dataUrl)
             : dataUrl;
 
+        console.log('Download blob:', blob.type, blob.size, 'bytes');
+
         const url = URL.createObjectURL(blob);
+
+        // Force correct extension
+        let finalFilename = filename;
+        if (!finalFilename.includes('.')) {
+            finalFilename += '.png';
+        }
+
+        console.log('Downloading as:', finalFilename);
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = blob.type === 'image/jpeg' ? filename.replace('.png', '.jpg') : filename;
+        a.download = finalFilename;
+        a.style.display = 'none';
 
         document.body.appendChild(a);
         a.click();
@@ -56,6 +67,7 @@ export function downloadImage(dataUrl, filename = 'image.png') {
         setTimeout(() => {
             URL.revokeObjectURL(url);
             a.remove();
+            console.log('Download cleanup done');
         }, 5000);
     } catch (error) {
         console.error('Download error:', error);
