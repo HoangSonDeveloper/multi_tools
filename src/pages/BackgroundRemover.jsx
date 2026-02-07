@@ -1,34 +1,48 @@
 import React, { useState } from 'react';
+import ModeSelector from '../components/BackgroundRemover/ModeSelector';
 import UploadZone from '../components/BackgroundRemover/UploadZone';
-import PreviewSection from '../components/BackgroundRemover/PreviewSection';
+import ProcessingView from '../components/BackgroundRemover/ProcessingView';
 import ResultSection from '../components/BackgroundRemover/ResultSection';
 
 const BackgroundRemover = () => {
-    const [step, setStep] = useState('upload'); // 'upload' | 'preview' | 'result'
+    const [step, setStep] = useState('mode'); // 'mode' | 'upload' | 'processing' | 'result'
+    const [mode, setMode] = useState(null); // 'vector' | 'photo'
     const [originalImage, setOriginalImage] = useState(null);
+    const [originalFile, setOriginalFile] = useState(null);
     const [resultDataUrl, setResultDataUrl] = useState(null);
-    const [tolerance, setTolerance] = useState(5);
+
+    const handleModeSelect = (selectedMode) => {
+        setMode(selectedMode);
+        setStep('upload');
+    };
 
     const handleFileSelected = (file) => {
         const url = URL.createObjectURL(file);
         setOriginalImage(url);
-        setStep('preview');
+        setOriginalFile(file);
+        setStep('processing');
     };
 
-    const handleConfirm = (dataUrl) => {
+    const handleProcessComplete = (dataUrl) => {
         setResultDataUrl(dataUrl);
         setStep('result');
     };
 
     const handleReset = () => {
         setOriginalImage(null);
+        setOriginalFile(null);
         setResultDataUrl(null);
-        setTolerance(5);
-        setStep('upload');
+        setMode(null);
+        setStep('mode');
     };
 
     const handleBack = () => {
-        setStep('upload');
+        if (step === 'upload') {
+            setMode(null);
+            setStep('mode');
+        } else if (step === 'processing') {
+            setStep('upload');
+        }
     };
 
     return (
@@ -38,20 +52,29 @@ const BackgroundRemover = () => {
                     Xóa nền ảnh <span className="gradient-text">thông minh</span>
                 </h1>
                 <p className="hero-subtitle">
-                    Tự động detect background từ viền ảnh. Giữ lại nội dung bên trong.
+                    {mode === 'vector'
+                        ? 'Tự động xóa background màu đồng nhất'
+                        : mode === 'photo'
+                            ? 'AI tự động detect và xóa background'
+                            : 'Chọn loại ảnh để xử lý phù hợp nhất'
+                    }
                 </p>
             </section>
 
-            {step === 'upload' && (
-                <UploadZone onFileSelected={handleFileSelected} />
+            {step === 'mode' && (
+                <ModeSelector onSelect={handleModeSelect} />
             )}
 
-            {step === 'preview' && (
-                <PreviewSection
+            {step === 'upload' && (
+                <UploadZone onFileSelected={handleFileSelected} onBack={handleBack} />
+            )}
+
+            {step === 'processing' && (
+                <ProcessingView
+                    mode={mode}
+                    imageFile={originalFile}
                     imageUrl={originalImage}
-                    tolerance={tolerance}
-                    onToleranceChange={setTolerance}
-                    onConfirm={handleConfirm}
+                    onComplete={handleProcessComplete}
                     onBack={handleBack}
                 />
             )}
